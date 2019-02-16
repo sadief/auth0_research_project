@@ -139,3 +139,71 @@ Rule is a function with these arguments:
 - `callback` function to send potentially modified tokens back to Auth0, or an error. (always call this or the script will timeout)
 
 Rules exectue in the order shown on the Auth0 Dashboard. If a rule depends on the execution of another rule, move the dependant rule lower in the list.
+
+### Accounts and Tenants
+
+When you create an account, you then create a Tenant which is a `logical isolation unit` and seems to be most often separated by like 'development, staging, production
+
+### Domains
+
+Then you have to pick a name for your Tenant which (appended with auth0.com) will be your Auth0 Domain. Custom domains cost.
+
+### Application
+
+Then you have to register each application which is either:
+
+- Native
+- Single Page Web App
+- Regular Web App
+- Machine to Machine App
+
+Each app gets a Client ID and a Client Secret
+
+## Auth0 Management API
+
+### Intro
+
+The API used to perform administrative tasks
+
+### Authentication
+
+Need to get an API token
+
+Auth0 Management API uses JWT's to authenticat requests
+
+To make calls to the API send then token in the good old fashioned way:
+
+````bash
+ curl -H "Authorization: Bearer eyJhb..."
+    https://@@TENANT@@.auth0.com/api/v2/users
+    ```
+````
+
+## Authorization Extension
+
+Auth extension provides support for user auth via Groups, Roles, and Permissions,
+
+**_Roles and Permissions are set on a per-application basis. If you need same roles or permissions on another application you'll have to create them separately_**
+
+### Auth0 My App is requesting access to your tenant
+
+https://community.auth0.com/t/how-do-i-skip-the-consent-page-for-my-api-authorization-flow/6035/13
+https://community.auth0.com/t/how-can-i-automatically-grant-access-to-a-client-for-a-user-without-prompting-the-user/7128/7
+
+UI Cannot be customized, however should only pop up for third party. It hates localhost and will always pop up, but I believe it _shouldn't_ pop up when in production
+
+### Are users application specific
+
+No - All users associated with a single Auth0 tenant are shared between the tenants application and have access to the applications.
+To keep users separate and restrict their access it's recommended to create an additional tenant.
+
+### Can we have anonymous users?
+
+I don't _think_ so: https://community.auth0.com/t/manage-anonymous-user-flow/8966
+https://community.auth0.com/t/jwt-token-for-guest-anonymous-unauthenticated-users/15653
+
+### Is it possible to use a rule to block access to an application based on someone's role or group?
+
+It is possible to do this based on their Role - I haven't been able to find information about it reagarding Groups though?
+You can just create a custom rule for this
+https://auth0.com/docs/api-auth/restrict-requests-for-scopes
